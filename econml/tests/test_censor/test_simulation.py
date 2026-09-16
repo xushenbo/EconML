@@ -20,8 +20,6 @@ Instead, the tests verify that representative workflows:
 import unittest
 
 import numpy as np
-from sksurv.ensemble import RandomSurvivalForest
-from sksurv.linear_model import CoxPHSurvivalAnalysis
 
 from econml.censor import (
     fit_nuisance_survival_crossfit,
@@ -39,7 +37,7 @@ from econml.metalearners._censor_metalearners import (
     CompetingRisksTLearner,
     SeparableDirectAstar1TLearner,
     SeparableIndirectAstar1TLearner,
-    TLearner,
+    CrossFitTLearner,
     AIPTWLearner,
     RLearner,
     IFLearner,
@@ -47,6 +45,13 @@ from econml.metalearners._censor_metalearners import (
 
 from ._helpers import gbr, lr
 from .dgp import make_survival_data, make_competing_data
+
+try:
+    import sksurv  # noqa: F401
+    from sksurv.ensemble import RandomSurvivalForest  # noqa: F401
+    from sksurv.linear_model import CoxPHSurvivalAnalysis  # noqa: F401
+except ImportError:  # pragma: no cover
+    raise unittest.SkipTest("scikit-survival is required for these tests") from None
 
 
 def _rsf(seed=0):
@@ -124,7 +129,7 @@ class TestEndToEndSurvivalSimulation(unittest.TestCase):
         cls.est_survival_t.fit(cls.Y, cls.T, X=cls.X)
         cls.pred_survival_t = cls.est_survival_t.effect(cls.X)
 
-        cls.est_tl = TLearner(model_mu=gbr(), cv=2, random_state=0)
+        cls.est_tl = CrossFitTLearner(model_mu=gbr(), cv=2, random_state=0)
         cls.est_tl.fit(cls.Y_aipcw, cls.T, X=cls.X)
         cls.pred_tl = cls.est_tl.effect(cls.X)
 
@@ -348,11 +353,11 @@ class TestEndToEndCompetingSimulation(unittest.TestCase):
         cls.est_competing_indirect.fit(cls.Y, cls.T, X=cls.X)
         cls.pred_competing_indirect = cls.est_competing_indirect.effect(cls.X)
 
-        cls.est_tl_total = TLearner(model_mu=gbr(), cv=2, random_state=0)
+        cls.est_tl_total = CrossFitTLearner(model_mu=gbr(), cv=2, random_state=0)
         cls.est_tl_total.fit(cls.Y_total, cls.T, X=cls.X)
         cls.pred_tl_total = cls.est_tl_total.effect(cls.X)
 
-        cls.est_tl_direct = TLearner(model_mu=gbr(), cv=2, random_state=0)
+        cls.est_tl_direct = CrossFitTLearner(model_mu=gbr(), cv=2, random_state=0)
         cls.est_tl_direct.fit(cls.Y_direct, cls.T, X=cls.X)
         cls.pred_tl_direct = cls.est_tl_direct.effect(cls.X)
 

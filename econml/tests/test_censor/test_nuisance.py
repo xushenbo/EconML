@@ -13,7 +13,6 @@ Tests verify:
 import unittest
 import numpy as np
 from sklearn.linear_model import LogisticRegression
-from sksurv.linear_model import CoxPHSurvivalAnalysis
 
 from econml.censor._nuisance import (
     fit_nuisance_survival,
@@ -23,6 +22,12 @@ from econml.censor._nuisance import (
     _make_sksurv_y,
 )
 from .dgp import make_survival_data, make_competing_data
+
+try:
+    import sksurv  # noqa: F401
+    from sksurv.linear_model import CoxPHSurvivalAnalysis  # noqa: F401
+except ImportError:  # pragma: no cover
+    raise unittest.SkipTest("scikit-survival is required for these tests") from None
 
 
 class TestMakeSksuvY(unittest.TestCase):

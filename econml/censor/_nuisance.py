@@ -22,7 +22,11 @@ import warnings
 import numpy as np
 from sklearn import clone
 from sklearn.ensemble import RandomForestClassifier
-from sksurv.ensemble import RandomSurvivalForest
+
+from .._lazy import _LazyModule
+
+# lazy: scikit-survival is an optional dependency, only needed once a survival model is built
+_sksurv_ensemble = _LazyModule("sksurv.ensemble")
 
 
 _PROPENSITY_CLIP = 1e-3
@@ -38,7 +42,7 @@ def _make_default_propensity_model():
 
 
 def _make_default_survival_model():
-    return RandomSurvivalForest(
+    return _sksurv_ensemble.RandomSurvivalForest(
         n_estimators=50,
         min_samples_leaf=5,
         random_state=_DEFAULT_NUISANCE_RANDOM_STATE,

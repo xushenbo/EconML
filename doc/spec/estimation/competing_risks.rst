@@ -170,9 +170,9 @@ Pseudo-outcome learners
 After constructing an RMTL pseudo-outcome, the following cross-fitted learners
 can be used:
 
-* :class:`~econml.metalearners.TLearner`
-* :class:`~econml.metalearners.SLearner`
-* :class:`~econml.metalearners.XLearner`
+* :class:`~econml.metalearners.CrossFitTLearner`
+* :class:`~econml.metalearners.CrossFitSLearner`
+* :class:`~econml.metalearners.CrossFitXLearner`
 * :class:`~econml.metalearners.IPTWLearner`
 * :class:`~econml.metalearners.AIPTWLearner`
 * :class:`~econml.metalearners.MCLearner`
@@ -245,9 +245,9 @@ Learners
     econml.metalearners.SeparableDirectAstar1SLearner
     econml.metalearners.SeparableIndirectAstar1TLearner
     econml.metalearners.SeparableIndirectAstar1SLearner
-    econml.metalearners.TLearner
-    econml.metalearners.SLearner
-    econml.metalearners.XLearner
+    econml.metalearners.CrossFitTLearner
+    econml.metalearners.CrossFitSLearner
+    econml.metalearners.CrossFitXLearner
     econml.metalearners.IPTWLearner
     econml.metalearners.AIPTWLearner
     econml.metalearners.MCLearner

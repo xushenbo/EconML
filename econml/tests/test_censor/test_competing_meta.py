@@ -13,7 +13,6 @@ Tests verify:
 
 import unittest
 import numpy as np
-from sksurv.linear_model import CoxPHSurvivalAnalysis
 
 from econml.metalearners._censor_metalearners import (
     CompetingRisksTLearner, CompetingRisksSLearner,
@@ -21,6 +20,12 @@ from econml.metalearners._censor_metalearners import (
     SeparableIndirectAstar1TLearner, SeparableIndirectAstar1SLearner,
 )
 from .dgp import make_competing_data
+
+try:
+    import sksurv  # noqa: F401
+    from sksurv.linear_model import CoxPHSurvivalAnalysis  # noqa: F401
+except ImportError:  # pragma: no cover
+    raise unittest.SkipTest("scikit-survival is required for these tests") from None
 
 
 class TestCompetingRisksTLearner(unittest.TestCase):

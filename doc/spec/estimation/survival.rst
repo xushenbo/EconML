@@ -117,9 +117,9 @@ Pseudo-outcome learners
 After constructing an RMST pseudo-outcome, the following cross-fitted learners
 can be used:
 
-* :class:`~econml.metalearners.TLearner`
-* :class:`~econml.metalearners.SLearner`
-* :class:`~econml.metalearners.XLearner`
+* :class:`~econml.metalearners.CrossFitTLearner`
+* :class:`~econml.metalearners.CrossFitSLearner`
+* :class:`~econml.metalearners.CrossFitXLearner`
 * :class:`~econml.metalearners.IPTWLearner`
 * :class:`~econml.metalearners.AIPTWLearner`
 * :class:`~econml.metalearners.MCLearner`
@@ -187,9 +187,9 @@ Learners
 
     econml.metalearners.SurvivalTLearner
     econml.metalearners.SurvivalSLearner
-    econml.metalearners.TLearner
-    econml.metalearners.SLearner
-    econml.metalearners.XLearner
+    econml.metalearners.CrossFitTLearner
+    econml.metalearners.CrossFitSLearner
+    econml.metalearners.CrossFitXLearner
     econml.metalearners.IPTWLearner
     econml.metalearners.AIPTWLearner
     econml.metalearners.MCLearner
@@ -199,5 +199,7 @@ Learners
     econml.metalearners.RLearner
     econml.metalearners.IFLearner
     econml.grf.CausalSurvivalForest
+    econml.grf.SurvivalForest
+    econml.grf.survival_forest
     econml.grf.GRFCausalForest
     econml.grf.causal_forest

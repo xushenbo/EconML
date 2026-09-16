@@ -21,10 +21,13 @@ from sklearn.base import BaseEstimator, clone
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.model_selection import KFold, StratifiedKFold, check_cv
 from sklearn.utils import check_array
-from sksurv.ensemble import RandomSurvivalForest
-from sksurv.functions import StepFunction
 
+from .._lazy import _LazyModule
 from ..censor._nuisance import _make_sksurv_y
+
+# lazy: scikit-survival is an optional dependency, only needed once a survival model is built
+_sksurv_ensemble = _LazyModule("sksurv.ensemble")
+_sksurv_functions = _LazyModule("sksurv.functions")
 
 
 _PROPENSITY_CLIP = 1e-3
@@ -51,7 +54,7 @@ def _make_default_continuous_nuisance_model():
 
 
 def _make_default_survival_nuisance_model():
-    return RandomSurvivalForest(
+    return _sksurv_ensemble.RandomSurvivalForest(
         n_estimators=100,
         min_samples_leaf=5,
         random_state=123,
@@ -343,7 +346,7 @@ class _ConstantSurvivalModel:
 
     def __init__(self, max_time):
         max_time = float(max(max_time, 1e-8))
-        self._fn = StepFunction(
+        self._fn = _sksurv_functions.StepFunction(
             x=np.array([0.0, max_time], dtype=float),
             y=np.array([1.0, 1.0], dtype=float),
         )
@@ -515,7 +518,7 @@ class _TLFinal:
         return np.mean((target[mask] - pred) ** 2)
 
 
-class TLearner(_DirectNuisanceCateMixin, _BaseCrossfitEstimator):
+class CrossFitTLearner(_DirectNuisanceCateMixin, _BaseCrossfitEstimator):
     """T-learner with cross-fitting.
 
     Fits per-arm outcome models mu_0(X) and mu_1(X) on held-out folds and
@@ -593,7 +596,7 @@ class _SLNuisance:
         return None
 
 
-class SLearner(_DirectNuisanceCateMixin, _BaseCrossfitEstimator):
+class CrossFitSLearner(_DirectNuisanceCateMixin, _BaseCrossfitEstimator):
     """S-learner with cross-fitting.
 
     Fits a single pooled model mu(X, T) with treatment-covariate interactions
@@ -720,7 +723,7 @@ class _XLFinal:
         return None
 
 
-class XLearner(_BaseCrossfitEstimator):
+class CrossFitXLearner(_BaseCrossfitEstimator):
     """X-learner with cross-fitting.
 
     Computes per-arm imputed effects out-of-sample, fits per-arm CATE models,

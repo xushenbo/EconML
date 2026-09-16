@@ -85,9 +85,13 @@ Censored Outcomes
     econml.metalearners.SurvivalSLearner
     econml.metalearners.CompetingRisksTLearner
     econml.metalearners.CompetingRisksSLearner
-    econml.metalearners.TLearner
-    econml.metalearners.SLearner
-    econml.metalearners.XLearner
+    econml.metalearners.SeparableDirectAstar1TLearner
+    econml.metalearners.SeparableDirectAstar1SLearner
+    econml.metalearners.SeparableIndirectAstar1TLearner
+    econml.metalearners.SeparableIndirectAstar1SLearner
+    econml.metalearners.CrossFitTLearner
+    econml.metalearners.CrossFitSLearner
+    econml.metalearners.CrossFitXLearner
     econml.metalearners.IPTWLearner
     econml.metalearners.AIPTWLearner
     econml.metalearners.MCLearner
@@ -97,6 +101,8 @@ Censored Outcomes
     econml.metalearners.RLearner
     econml.metalearners.IFLearner
     econml.grf.CausalSurvivalForest
+    econml.grf.SurvivalForest
+    econml.grf.survival_forest
     econml.grf.GRFCausalForest
     econml.grf.causal_forest
 

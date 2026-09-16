@@ -14,9 +14,9 @@ import unittest
 import numpy as np
 
 from econml.metalearners._censor_metalearners import (
-    TLearner,
-    SLearner,
-    XLearner,
+    CrossFitTLearner,
+    CrossFitSLearner,
+    CrossFitXLearner,
     IPTWLearner,
     AIPTWLearner,
     MCLearner,
@@ -36,6 +36,11 @@ from econml.metalearners._censor_metalearners import (
 )
 from econml.censor import fit_nuisance_survival, aipcw_cut_rmst, uif_diff_rmst
 from .dgp import make_survival_data, make_competing_data
+
+try:
+    import sksurv  # noqa: F401
+except ImportError:  # pragma: no cover
+    raise unittest.SkipTest("scikit-survival is required for these tests") from None
 
 
 # ---------------------------------------------------------------------------
@@ -85,7 +90,7 @@ class _CrossFitBase(unittest.TestCase):
 class TestCrossFitTLearner(_CrossFitBase):
 
     def _est(self, cv=2):
-        return TLearner(cv=cv, random_state=0)
+        return CrossFitTLearner(cv=cv, random_state=0)
 
     def test_fit_effect_shape(self):
         est = self._est()
@@ -123,7 +128,7 @@ class TestCrossFitTLearner(_CrossFitBase):
 class TestCrossFitSLearner(_CrossFitBase):
 
     def _est(self, cv=2):
-        return SLearner(cv=cv, random_state=0)
+        return CrossFitSLearner(cv=cv, random_state=0)
 
     def test_fit_effect_shape(self):
         est = self._est()
@@ -156,7 +161,7 @@ class TestCrossFitSLearner(_CrossFitBase):
 class TestCrossFitXLearner(_CrossFitBase):
 
     def _est(self, cv=2):
-        return XLearner(cv=cv, random_state=0)
+        return CrossFitXLearner(cv=cv, random_state=0)
 
     def test_fit_effect_shape(self):
         est = self._est()

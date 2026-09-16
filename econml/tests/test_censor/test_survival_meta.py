@@ -14,7 +14,6 @@ Tests verify:
 
 import unittest
 import numpy as np
-from sksurv.ensemble import RandomSurvivalForest
 
 from econml.metalearners._censor_metalearners import (SurvivalTLearner, SurvivalSLearner,
                                                       IPTWLearner, ULearner, MCLearner, MCEALearner,
@@ -22,6 +21,12 @@ from econml.metalearners._censor_metalearners import (SurvivalTLearner, Survival
 from econml.censor import fit_nuisance_survival, aipcw_cut_rmst, uif_diff_rmst
 from ._helpers import gbr
 from .dgp import make_survival_data
+
+try:
+    import sksurv  # noqa: F401
+    from sksurv.ensemble import RandomSurvivalForest  # noqa: F401
+except ImportError:  # pragma: no cover
+    raise unittest.SkipTest("scikit-survival is required for these tests") from None
 
 
 class TestSurvivalTLearner(unittest.TestCase):
