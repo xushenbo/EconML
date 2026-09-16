@@ -135,8 +135,7 @@ def _cumulative_integral(values, ds):
 
 
 def _interpolate_to_tau(matrix, s, tau, ind):
-    """Linearly interpolate an ``(n, ns)`` matrix between columns *ind* and *ind+1*
-    to the exact time *tau*.
+    """Linearly interpolate an ``(n, ns)`` matrix between columns *ind* and *ind+1* to time *tau*.
 
     Mirrors R's ``M[, ind] + (tau - s[ind]) * (M[, ind+1] - M[, ind]) / (s[ind+1] - s[ind])``.
 
@@ -195,8 +194,6 @@ def _ipcw_weight_matrix(time, event, G, s):
 
     Returns ndarray (n, ns).
     """
-    n = len(time)
-    ns = len(s)
     t_col = time[:, np.newaxis]
     s_row = s[np.newaxis, :]
 
@@ -260,8 +257,6 @@ def ipcw_cut_rmst(a, time, event, tau, G_a0, G_a1,
     event = np.asarray(event, dtype=float).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     G_a0 = _clamp_survival(np.array(G_a0, dtype=float, copy=True))
     G_a1 = _clamp_survival(np.array(G_a1, dtype=float, copy=True))
@@ -305,8 +300,6 @@ def bj_cut_rmst(a, time, event, tau, S_a0, S_a1,
     event = np.asarray(event, dtype=float).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     S_a0 = _clamp_survival(np.array(S_a0, dtype=float, copy=True))
     S_a1 = _clamp_survival(np.array(S_a1, dtype=float, copy=True))
@@ -362,8 +355,6 @@ def aipcw_cut_rmst(a, time, event, tau, G_a0, G_a1, S_a0, S_a1,
     event = np.asarray(event, dtype=float).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     S_a0 = _clamp_survival(np.array(S_a0, dtype=float, copy=True))
     S_a1 = _clamp_survival(np.array(S_a1, dtype=float, copy=True))
@@ -434,8 +425,6 @@ def uif_diff_rmst(a, time, event, tau, bw, tilt, G_a0, G_a1, S_a0, S_a1,
     tilt = np.asarray(tilt, dtype=float).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     S_a0 = _clamp_survival(np.array(S_a0, dtype=float, copy=True))
     S_a1 = _clamp_survival(np.array(S_a1, dtype=float, copy=True))
@@ -510,8 +499,6 @@ def ipcw_cut_rmtlj(a, time, event, tau, G_a0, G_a1, cause=1,
     event = np.asarray(event, dtype=int).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     G_a0 = _clamp_survival(np.array(G_a0, dtype=float, copy=True))
     G_a1 = _clamp_survival(np.array(G_a1, dtype=float, copy=True))
@@ -558,8 +545,6 @@ def bj_cut_rmtlj(a, time, event, tau, S_a0, S_a1, Sj_a0, Sj_a1, cause=1,
     event = np.asarray(event, dtype=int).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     S_a0 = _clamp_survival(np.array(S_a0, dtype=float, copy=True))
     S_a1 = _clamp_survival(np.array(S_a1, dtype=float, copy=True))
@@ -621,8 +606,6 @@ def aipcw_cut_rmtlj(a, time, event, tau, G_a0, G_a1, S_a0, S_a1,
     event = np.asarray(event, dtype=int).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     S_a0 = _clamp_survival(np.array(S_a0, dtype=float, copy=True))
     S_a1 = _clamp_survival(np.array(S_a1, dtype=float, copy=True))
@@ -699,8 +682,6 @@ def aipcw_cut_rmtlj_sep_direct_astar1(a, time, event, tau, G_a0, G_a1,
     event = np.asarray(event, dtype=int).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     S_a0 = _clamp_survival(np.array(S_a0, dtype=float, copy=True))
     S_a1 = _clamp_survival(np.array(S_a1, dtype=float, copy=True))
@@ -714,7 +695,6 @@ def aipcw_cut_rmtlj_sep_direct_astar1(a, time, event, tau, G_a0, G_a1,
     a_col = a[:, np.newaxis]
     S_a = S_a0 * (1 - a_col) + S_a1 * a_col
     G_a = G_a0 * (1 - a_col) + G_a1 * a_col
-    Sj_a = Sj_a0 * (1 - a_col) + Sj_a1 * a_col
     Sjbar_a = Sjbar_a0 * (1 - a_col) + Sjbar_a1 * a_col
 
     ind_dict = _build_indicators(time, event, s, cause=cause)
@@ -808,8 +788,6 @@ def aipcw_cut_rmtlj_sep_indirect_astar1(a, time, event, tau, G_a0, G_a1,
     event = np.asarray(event, dtype=int).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     S_a0 = _clamp_survival(np.array(S_a0, dtype=float, copy=True))
     S_a1 = _clamp_survival(np.array(S_a1, dtype=float, copy=True))
@@ -823,7 +801,6 @@ def aipcw_cut_rmtlj_sep_indirect_astar1(a, time, event, tau, G_a0, G_a1,
     a_col = a[:, np.newaxis]
     S_a = S_a0 * (1 - a_col) + S_a1 * a_col
     G_a = G_a0 * (1 - a_col) + G_a1 * a_col
-    Sj_a = Sj_a0 * (1 - a_col) + Sj_a1 * a_col
     Sjbar_a = Sjbar_a0 * (1 - a_col) + Sjbar_a1 * a_col
 
     ind_dict = _build_indicators(time, event, s, cause=cause)
@@ -923,8 +900,6 @@ def uif_diff_rmtlj(a, time, event, tau, bw, tilt, G_a0, G_a1,
     tilt = np.asarray(tilt, dtype=float).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     S_a0 = _clamp_survival(np.array(S_a0, dtype=float, copy=True))
     S_a1 = _clamp_survival(np.array(S_a1, dtype=float, copy=True))
@@ -1007,8 +982,6 @@ def uif_diff_rmtlj_sep_direct_astar1(a, ps, time, event, tau, bw, tilt,
     tilt = np.asarray(tilt, dtype=float).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     S_a0 = _clamp_survival(np.array(S_a0, dtype=float, copy=True))
     S_a1 = _clamp_survival(np.array(S_a1, dtype=float, copy=True))
@@ -1032,7 +1005,6 @@ def uif_diff_rmtlj_sep_direct_astar1(a, ps, time, event, tau, bw, tilt,
     S_dH_a0 = _incremental_hazard(S_a0)
     S_dH_a1 = _incremental_hazard(S_a1)
     Fjbar_dH_a0 = _incremental_hazard(Sjbar_a0)
-    Fjbar_dH_a1 = _incremental_hazard(Sjbar_a1)
 
     Fj_a0 = _compute_cif_matrix(S_a0, Fj_dH_a0)
     Fj_a1 = _compute_cif_matrix(S_a1, Fj_dH_a1)
@@ -1120,8 +1092,6 @@ def uif_diff_rmtlj_sep_indirect_astar1(a, ps, time, event, tau, bw, tilt,
     tilt = np.asarray(tilt, dtype=float).ravel()
 
     s, ds, ind = _setup_time_grid(time, tau, time_grid, admin_cens)
-    n = len(time)
-    ns = len(s)
 
     S_a0 = _clamp_survival(np.array(S_a0, dtype=float, copy=True))
     S_a1 = _clamp_survival(np.array(S_a1, dtype=float, copy=True))
@@ -1145,7 +1115,6 @@ def uif_diff_rmtlj_sep_indirect_astar1(a, ps, time, event, tau, bw, tilt,
     S_dH_a0 = _incremental_hazard(S_a0)
     S_dH_a1 = _incremental_hazard(S_a1)
     Fjbar_dH_a0 = _incremental_hazard(Sjbar_a0)
-    Fjbar_dH_a1 = _incremental_hazard(Sjbar_a1)
 
     Fj_a0 = _compute_cif_matrix(S_a0, Fj_dH_a0)
     Fj_a1 = _compute_cif_matrix(S_a1, Fj_dH_a1)

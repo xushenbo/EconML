@@ -9,6 +9,7 @@ the same nuisance-estimation pattern as ``grf::causal_survival_forest``.
 """
 
 from dataclasses import dataclass
+from warnings import warn
 import numpy as np
 from sklearn.base import BaseEstimator
 from sklearn.utils import check_array
@@ -367,7 +368,10 @@ class SurvivalForest(BaseEstimator):
         self.Y_train_ = np.array(Y, copy=True)
         self.D_train_ = np.array(D, copy=True)
         base_sample_weight = self.sample_weights if sample_weight is None else sample_weight
-        self.sample_weight_ = None if base_sample_weight is None else _check_sample_weight(base_sample_weight, X, dtype=float)
+        if base_sample_weight is None:
+            self.sample_weight_ = None
+        else:
+            self.sample_weight_ = _check_sample_weight(base_sample_weight, X, dtype=float)
         cluster_weights, self.cluster_info_ = _cluster_weight_vector(
             self.clusters, self.equalize_cluster_weights, n
         )

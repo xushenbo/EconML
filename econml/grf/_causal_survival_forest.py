@@ -1,9 +1,7 @@
 # Copyright (c) PyWhy contributors. All rights reserved.
 # Licensed under the MIT License.
 
-"""
-Causal Survival Forest for heterogeneous treatment effect estimation with
-right-censored outcomes.
+"""Causal Survival Forest for heterogeneous treatment effect estimation with right-censored outcomes.
 
 Mirrors ``grf::causal_survival_forest`` from:
   grf-master/r-package/grf/R/causal_survival_forest.R
@@ -773,7 +771,10 @@ class _CausalSurvivalForestTrainer(BaseEstimator):
         X = check_array(np.asarray(X, dtype=float))
         W = np.asarray(W, dtype=float).reshape(-1)
         y = np.asarray(y, dtype=float).reshape(-1)
-        sw = np.ones(X.shape[0], dtype=float) if sample_weight is None else np.asarray(sample_weight, dtype=float).reshape(-1)
+        if sample_weight is None:
+            sw = np.ones(X.shape[0], dtype=float)
+        else:
+            sw = np.asarray(sample_weight, dtype=float).reshape(-1)
         n = X.shape[0]
         self.X_train_ = np.array(X, copy=True)
         self.W_train_ = np.array(W, copy=True)
@@ -782,7 +783,10 @@ class _CausalSurvivalForestTrainer(BaseEstimator):
         self.treatment_raw_ = None if treatment_raw is None else np.asarray(treatment_raw, dtype=int).reshape(-1)
         self.censor_ = None if censor is None else np.asarray(censor, dtype=int).reshape(-1)
         self.n_features_in_ = X.shape[1]
-        self.mtry_ = min(self.n_features_in_, int(np.ceil(np.sqrt(self.n_features_in_) + 20))) if self.max_features == "auto" else int(self.max_features)
+        if self.max_features == "auto":
+            self.mtry_ = min(self.n_features_in_, int(np.ceil(np.sqrt(self.n_features_in_) + 20)))
+        else:
+            self.mtry_ = int(self.max_features)
         self.n_outputs_ = 1
         self.n_relevant_outputs_ = 1
         _, self.cluster_info_ = _cluster_weight_vector(self.clusters, self.equalize_cluster_weights, n)
@@ -1331,7 +1335,10 @@ class CausalSurvivalForest(BaseEstimator):
             fY = (time_mod > horizon).astype(float)
 
         # ---- Time grid (unique observed times) ----
-        Y_grid = np.sort(np.unique(time_mod)) if self.failure_times is None else np.sort(np.asarray(self.failure_times, dtype=float).ravel())
+        if self.failure_times is None:
+            Y_grid = np.sort(np.unique(time_mod))
+        else:
+            Y_grid = np.sort(np.asarray(self.failure_times, dtype=float).ravel())
         if len(Y_grid) <= 2:
             raise ValueError("Number of distinct event times must be > 2.")
         if horizon < Y_grid[0]:
@@ -1363,7 +1370,10 @@ class CausalSurvivalForest(BaseEstimator):
             _fit_survival_nuisance_model(
                 model_event_, XT, time_mod, event_mod, sample_weight=effective_sample_weight
             )
-            S_hat = model_event_.oob_predict(XT) if self.compute_oob_predictions else model_event_.predict(XT).predictions
+            if self.compute_oob_predictions:
+                S_hat = model_event_.oob_predict(XT)
+            else:
+                S_hat = model_event_.predict(XT).predictions
             S1_hat = model_event_.predict(np.column_stack([X, np.ones(n)]), failure_times=Y_grid).predictions
             S0_hat = model_event_.predict(np.column_stack([X, np.zeros(n)]), failure_times=Y_grid).predictions
         except (FloatingPointError, ValueError, np.linalg.LinAlgError, NotImplementedError) as exc:

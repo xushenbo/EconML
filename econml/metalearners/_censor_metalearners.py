@@ -654,7 +654,7 @@ class _XLNuisance:
         T_arr = np.asarray(T).ravel().astype(int)
         Y_arr = np.asarray(Y).ravel()
         X_arr = np.asarray(X)
-        n = X_arr.shape[0]
+        X_arr.shape[0]
 
         mu0 = self._m0.predict(X_arr)
         mu1 = self._m1.predict(X_arr)
@@ -1717,8 +1717,10 @@ class CompetingRisksTLearner(_DirectNuisanceCateMixin, _BaseCrossfitEstimator):
             self._sep_time_grid = np.sort(np.unique(time))
             self._sep_overall0 = _fit_survival_or_constant(self.models, X_arr[mask0], time[mask0], event[mask0] != 0)
             self._sep_overall1 = _fit_survival_or_constant(self.models, X_arr[mask1], time[mask1], event[mask1] != 0)
-            self._sep_cause0 = _fit_survival_or_constant(self.models_cause, X_arr[mask0], time[mask0], event[mask0] == self.cause)
-            self._sep_cause1 = _fit_survival_or_constant(self.models_cause, X_arr[mask1], time[mask1], event[mask1] == self.cause)
+            self._sep_cause0 = _fit_survival_or_constant(
+                self.models_cause, X_arr[mask0], time[mask0], event[mask0] == self.cause)
+            self._sep_cause1 = _fit_survival_or_constant(
+                self.models_cause, X_arr[mask1], time[mask1], event[mask1] == self.cause)
             self._sep_competing0 = _fit_survival_or_constant(
                 self.models_competing, X_arr[mask0], time[mask0], event[mask0] > self.cause)
             self._sep_competing1 = _fit_survival_or_constant(

@@ -1,5 +1,6 @@
-"""Smoke tests for SurvivalTLearner, SurvivalSLearner, and pseudo-outcome learners
-(IPTWLearner, ULearner, MCLearner, MCEALearner).
+"""Smoke tests for the survival learners and the pseudo-outcome learners.
+
+Covers SurvivalTLearner, SurvivalSLearner, IPTWLearner, ULearner, MCLearner, MCEALearner.
 
 DGP mirrors original/simulation/survival/survival_hte_simulation_case1.R
 (case 1: proportional-hazards-style with log-logistic / log-normal event times).
