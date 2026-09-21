@@ -110,7 +110,7 @@ def _compute_rmst(surv_fns, tau, time_grid=None):
         vals = np.empty((surv_arr.shape[0], grid_tau.size), dtype=float)
         for i in range(surv_arr.shape[0]):
             vals[i] = np.interp(grid_tau, grid, surv_arr[i], left=1.0, right=surv_arr[i, -1])
-        return np.trapz(vals, grid_tau, axis=1)
+        return np.trapezoid(vals, grid_tau, axis=1)
     out = []
     for fn in surv_fns:
         x = np.asarray(fn.x, dtype=float)
@@ -161,7 +161,7 @@ def _compute_rmtl_from_cif(cif, time_grid, tau):
     vals = np.empty((cif_arr.shape[0], grid_tau.size), dtype=float)
     for i in range(cif_arr.shape[0]):
         vals[i] = np.interp(grid_tau, grid, cif_arr[i], left=0.0, right=cif_arr[i, -1])
-    return np.trapz(vals, grid_tau, axis=1)
+    return np.trapezoid(vals, grid_tau, axis=1)
 
 def _fit_propensity_fold(model, T, X):
     """Fit propensity model and return clipped probabilities."""
